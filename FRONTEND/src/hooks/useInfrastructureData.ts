@@ -28,11 +28,15 @@ export function useInfrastructures(filters: InfrastructureFilters) {
   });
 }
 
-export function useGeoJson(filters: InfrastructureFilters) {
+export function useGeoJson(
+  filters: InfrastructureFilters,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: ["geojson", filters],
     queryFn: () => fetchGeoJson(filters),
     placeholderData: keepPreviousData,
+    enabled: options?.enabled ?? true,
   });
 }
 

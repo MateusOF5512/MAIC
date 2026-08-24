@@ -1,10 +1,14 @@
 """Database connection helpers (JSON store today, PostGIS later)."""
 
+from typing import TYPE_CHECKING
+
 from app.database.json_store import JsonStore
-from app.repositories.json_infrastructure_repository import JsonInfrastructureRepository
+
+if TYPE_CHECKING:
+    from app.repositories.json_infrastructure_repository import JsonInfrastructureRepository
 
 _json_store: JsonStore | None = None
-_infrastructure_repository: JsonInfrastructureRepository | None = None
+_infrastructure_repository: "JsonInfrastructureRepository | None" = None
 
 
 def get_json_store() -> JsonStore:
@@ -14,8 +18,10 @@ def get_json_store() -> JsonStore:
     return _json_store
 
 
-def get_infrastructure_repository() -> JsonInfrastructureRepository:
+def get_infrastructure_repository() -> "JsonInfrastructureRepository":
     global _infrastructure_repository
     if _infrastructure_repository is None:
+        from app.repositories.json_infrastructure_repository import JsonInfrastructureRepository
+
         _infrastructure_repository = JsonInfrastructureRepository(get_json_store())
     return _infrastructure_repository

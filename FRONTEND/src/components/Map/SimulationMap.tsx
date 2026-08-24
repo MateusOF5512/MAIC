@@ -60,17 +60,19 @@ export function SimulationMap({
   seaLevel,
   className,
   basemapId = DEFAULT_BASEMAP_ID,
+  visible = true,
 }: {
   seaLevel: number;
   className?: string;
   basemapId?: BasemapId;
+  visible?: boolean;
 }) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const popupRef = useRef<Popup | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const { filters } = useFilters();
-  const { data, isLoading } = useSimulationGeoJson(seaLevel, filters);
+  const { data, isLoading } = useSimulationGeoJson(seaLevel, filters, { enabled: visible });
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
@@ -149,6 +151,22 @@ export function SimulationMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady) return;
+
+    if (!visible) {
+      popupRef.current?.remove();
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      map.resize();
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [visible, mapReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
     applyBasemap(map, basemapId);
   }, [basemapId, mapReady]);
 
@@ -159,7 +177,10 @@ export function SimulationMap({
   }, [data, mapReady]);
 
   return (
-    <div className={cn("relative overflow-hidden rounded-xl border border-border bg-white", className)}>
+    <div
+      className={cn("relative overflow-hidden rounded-xl border border-border bg-white", className)}
+      aria-hidden={!visible}
+    >
       {isLoading && (
         <div className="absolute left-4 top-4 z-10 rounded-md bg-white/90 px-3 py-1 text-sm shadow">
           Atualizando simulação...

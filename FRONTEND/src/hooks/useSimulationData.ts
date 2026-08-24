@@ -25,10 +25,15 @@ export function useSimulationKpis(seaLevel: number, filters: InfrastructureFilte
   });
 }
 
-export function useSimulationGeoJson(seaLevel: number, filters: InfrastructureFilters = {}) {
+export function useSimulationGeoJson(
+  seaLevel: number,
+  filters: InfrastructureFilters = {},
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: ["simulation-geojson", seaLevel, filters],
     queryFn: () => fetchSimulationGeoJson(seaLevel, filters),
     placeholderData: keepPreviousData,
+    enabled: options?.enabled ?? true,
   });
 }
