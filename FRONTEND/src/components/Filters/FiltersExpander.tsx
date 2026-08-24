@@ -17,6 +17,7 @@ export function FiltersExpander({
 }) {
   const pathname = usePathname();
   const isBuscaPage = pathname.startsWith("/busca");
+  const isMapPage = pathname === "/mapa";
   const [open, setOpen] = useState(false);
   const { filters } = useFilters();
 
@@ -57,6 +58,7 @@ export function FiltersExpander({
             showManagement
             showAltitude
             showBasemap={!isBuscaPage}
+            showColorByType={isMapPage}
           />
         </div>
       ) : null}

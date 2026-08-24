@@ -9,7 +9,8 @@ import { useFilters } from "@/hooks/useFilters";
 import type { GeoJsonFeatureCollection } from "@/types/infrastructure";
 import { STATUS_LABELS, getManagementLabel, getTypeLabel } from "@/utils/status";
 import { cn } from "@/utils/cn";
-import { registerTypeIcons, TYPE_ICON_LAYOUT, getMapPointPaint } from "@/utils/mapIcons";
+import { registerTypeIcons, TYPE_ICON_LAYOUT, getMapPointPaint, applyMapPointPaint } from "@/utils/mapIcons";
+import { useMapBasemap } from "@/hooks/useMapBasemap";
 import {
   applyBasemap,
   createEmptyMapStyle,
@@ -68,6 +69,7 @@ export function InfrastructureMap({
   const popupRef = useRef<Popup | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const { filters } = useFilters();
+  const { colorByType } = useMapBasemap();
   const { data, isLoading } = useGeoJson(filters, { enabled: visible });
 
   useEffect(() => {
@@ -170,6 +172,12 @@ export function InfrastructureMap({
     if (!map || !mapReady) return;
     applyBasemap(map, basemapId);
   }, [basemapId, mapReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    applyMapPointPaint(map, colorByType, "status");
+  }, [colorByType, mapReady]);
 
   useEffect(() => {
     const map = mapRef.current;

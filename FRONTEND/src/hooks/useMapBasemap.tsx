@@ -7,19 +7,24 @@ import { DEFAULT_BASEMAP_ID, type BasemapId } from "@/utils/mapBasemaps";
 interface MapBasemapContextValue {
   basemapId: BasemapId;
   setBasemapId: (value: BasemapId) => void;
+  colorByType: boolean;
+  setColorByType: (value: boolean) => void;
 }
 
 const MapBasemapContext = createContext<MapBasemapContextValue | null>(null);
 
 export function MapBasemapProvider({ children }: { children: ReactNode }) {
   const [basemapId, setBasemapId] = useState<BasemapId>(DEFAULT_BASEMAP_ID);
+  const [colorByType, setColorByType] = useState(false);
 
   const value = useMemo(
     () => ({
       basemapId,
       setBasemapId,
+      colorByType,
+      setColorByType,
     }),
-    [basemapId],
+    [basemapId, colorByType],
   );
 
   return <MapBasemapContext.Provider value={value}>{children}</MapBasemapContext.Provider>;

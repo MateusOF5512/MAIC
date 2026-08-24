@@ -25,6 +25,7 @@ interface InfrastructureFiltersBarProps {
   showManagement?: boolean;
   showAltitude?: boolean;
   showBasemap?: boolean;
+  showColorByType?: boolean;
   className?: string;
 }
 
@@ -41,11 +42,12 @@ export function InfrastructureFiltersBar({
   showManagement = false,
   showAltitude = false,
   showBasemap = false,
+  showColorByType = false,
   className,
 }: InfrastructureFiltersBarProps) {
   const { filters, setFilter } = useFilters();
   const { data: options } = useFilterOptions();
-  const { basemapId, setBasemapId } = useMapBasemap();
+  const { basemapId, setBasemapId, colorByType, setColorByType } = useMapBasemap();
   const [searchInput, setSearchInput] = useState(filters.search ?? "");
 
   useEffect(() => {
@@ -133,6 +135,18 @@ export function InfrastructureFiltersBar({
       )}
 
       {showBasemap ? <MapBasemapSelector value={basemapId} onChange={setBasemapId} /> : null}
+
+      {showColorByType ? (
+        <label className="flex h-10 w-full cursor-pointer items-center gap-2 rounded-md border border-border bg-white px-3 text-sm lg:w-auto">
+          <input
+            type="checkbox"
+            checked={colorByType}
+            onChange={(event) => setColorByType(event.target.checked)}
+            className="h-4 w-4 rounded border-border accent-slate-900"
+          />
+          <span className="whitespace-nowrap text-slate-700">Colorir por tipo</span>
+        </label>
+      ) : null}
 
       {showAltitude ? <AltitudeSlider className="w-full sm:ml-auto sm:max-w-xs" /> : null}
     </div>

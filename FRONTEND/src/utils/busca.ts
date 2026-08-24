@@ -39,7 +39,7 @@ export const MACRO_TYPE_ICONS: Record<MacroType, string> = {
   OUTROS: "📍",
 };
 
-const TYPE_TO_MACRO: Record<string, MacroType> = {
+export const TYPE_TO_MACRO: Record<string, MacroType> = {
   HOSPITAL: "SAUDE",
   POSTO_SAUDE: "SAUDE",
   PRONTO_ATENDIMENTO: "SAUDE",
