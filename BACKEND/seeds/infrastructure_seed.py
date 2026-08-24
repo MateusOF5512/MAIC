@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 from app.database.json_store import JsonStore
-from app.models.infrastructure import InfrastructureStatus, InfrastructureType
+from app.models.infrastructure import InfrastructureStatus
 from app.repositories.json_infrastructure_repository import JsonInfrastructureRepository
 
 
@@ -13,7 +13,7 @@ def get_seed_records() -> list[dict[str, Any]]:
     raw_records = [
         {
             "name": "Hospital Governador Celso Ramos",
-            "type": InfrastructureType.HOSPITAL.value,
+            "type": "HOSPITAL",
             "latitude": -27.58838,
             "longitude": -48.55062,
             "cep": "88015-270",
@@ -26,7 +26,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "Hospital Infantil Joana de Gusmão",
-            "type": InfrastructureType.HOSPITAL.value,
+            "type": "HOSPITAL",
             "latitude": -27.57671,
             "longitude": -48.53529,
             "cep": "88025-301",
@@ -39,7 +39,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "Hospital Nereu Ramos",
-            "type": InfrastructureType.HOSPITAL.value,
+            "type": "HOSPITAL",
             "latitude": -27.57779,
             "longitude": -48.53372,
             "cep": "88025-301",
@@ -52,7 +52,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "Maternidade Carmela Dutra",
-            "type": "Hospital/Maternidade",
+            "type": "HOSPITAL",
             "latitude": -27.58919,
             "longitude": -48.55023,
             "cep": "88015-270",
@@ -65,7 +65,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "Hospital Universitário UFSC",
-            "type": InfrastructureType.HOSPITAL.value,
+            "type": "HOSPITAL",
             "latitude": -27.59990,
             "longitude": -48.52060,
             "cep": "88036-800",
@@ -78,7 +78,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "Hospital Regional de São José",
-            "type": InfrastructureType.HOSPITAL.value,
+            "type": "HOSPITAL",
             "latitude": -27.60966,
             "longitude": -48.63005,
             "cep": "88103-901",
@@ -91,7 +91,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "EBM Almirante Carvalhal",
-            "type": InfrastructureType.ESCOLA.value,
+            "type": "ESCOLA",
             "latitude": -27.60690,
             "longitude": -48.57709,
             "cep": "88080-150",
@@ -104,7 +104,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "EBM Donícia Maria da Costa",
-            "type": InfrastructureType.ESCOLA.value,
+            "type": "ESCOLA",
             "latitude": -27.54881,
             "longitude": -48.49643,
             "cep": "88032-001",
@@ -117,7 +117,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "EBM Batista Pereira",
-            "type": InfrastructureType.ESCOLA.value,
+            "type": "ESCOLA",
             "latitude": -27.70225,
             "longitude": -48.53634,
             "cep": "88064-000",
@@ -130,7 +130,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "EBM José Amaro Cordeiro",
-            "type": InfrastructureType.ESCOLA.value,
+            "type": "ESCOLA",
             "latitude": -27.71655,
             "longitude": -48.50746,
             "cep": "88066-000",
@@ -143,7 +143,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "EBM Virgílio dos Reis Várzea",
-            "type": InfrastructureType.ESCOLA.value,
+            "type": "ESCOLA",
             "latitude": -27.43281,
             "longitude": -48.45605,
             "cep": "88054-030",
@@ -156,7 +156,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "EBM Luiz Cândido da Luz",
-            "type": InfrastructureType.ESCOLA.value,
+            "type": "ESCOLA",
             "latitude": -27.44882,
             "longitude": -48.43405,
             "cep": "88058-000",
@@ -169,7 +169,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "1ª Delegacia de Polícia da Capital",
-            "type": InfrastructureType.POLICIA_CIVIL.value,
+            "type": "POLICIA_CIVIL",
             "latitude": -27.59314,
             "longitude": -48.55141,
             "cep": "88015-100",
@@ -182,7 +182,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "6ª Delegacia de Polícia da Capital",
-            "type": InfrastructureType.POLICIA_CIVIL.value,
+            "type": "POLICIA_CIVIL",
             "latitude": -27.57297,
             "longitude": -48.53486,
             "cep": "88025-500",
@@ -195,7 +195,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "1ª Região de Polícia Militar",
-            "type": InfrastructureType.POLICIA_MILITAR.value,
+            "type": "POLICIA_MILITAR",
             "latitude": -27.59255,
             "longitude": -48.54964,
             "city": "Florianópolis",
@@ -207,7 +207,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "Terminal Rodoviário Rita Maria",
-            "type": InfrastructureType.TRANSPORTE.value,
+            "type": "TERMINAL_RODOVIARIO",
             "latitude": -27.59716,
             "longitude": -48.55802,
             "cep": "88010-906",
@@ -220,7 +220,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "Terminal de Integração do Centro — TICEN",
-            "type": InfrastructureType.TRANSPORTE.value,
+            "type": "TERMINAL_URBANO",
             "latitude": -27.59844,
             "longitude": -48.55346,
             "city": "Florianópolis",
@@ -232,7 +232,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "Aeroporto Internacional de Florianópolis — Hercílio Luz",
-            "type": InfrastructureType.AEROPORTO.value,
+            "type": "AEROPORTO",
             "latitude": -27.66999,
             "longitude": -48.54730,
             "cep": "88047-900",
@@ -246,7 +246,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "Ponte Hercílio Luz",
-            "type": InfrastructureType.PONTE_RODOVIA.value,
+            "type": "PONTE",
             "latitude": -27.59389,
             "longitude": -48.56583,
             "city": "Florianópolis",
@@ -258,7 +258,7 @@ def get_seed_records() -> list[dict[str, Any]]:
         },
         {
             "name": "Ponte Colombo Salles",
-            "type": InfrastructureType.PONTE_RODOVIA.value,
+            "type": "PONTE",
             "latitude": -27.59720,
             "longitude": -48.56530,
             "city": "Florianópolis",

@@ -2,6 +2,17 @@ import type { CircleLayerSpecification, Map, SymbolLayerSpecification } from "ma
 
 import { TYPE_ICONS } from "@/utils/status";
 
+const TYPE_ALIASES: Record<string, keyof typeof TYPE_ICONS> = {
+  Hospital: "HOSPITAL",
+  "Hospital/Maternidade": "HOSPITAL",
+  Escola: "ESCOLA",
+  "Polícia Civil": "POLICIA_CIVIL",
+  "Polícia Militar": "POLICIA_MILITAR",
+  Transporte: "TERMINAL_RODOVIARIO",
+  Aeroporto: "AEROPORTO",
+  "Ponte/Rodovia": "PONTE",
+};
+
 const ICON_CANVAS_SIZE = 88;
 const ICON_PREFIX = "type-icon-";
 
@@ -100,6 +111,10 @@ export function getTypeIconImageExpression(): IconImageExpression {
 
   for (const type of Object.keys(TYPE_ICONS)) {
     expression.push(type, `${ICON_PREFIX}${type}`);
+  }
+
+  for (const [alias, code] of Object.entries(TYPE_ALIASES)) {
+    expression.push(alias, `${ICON_PREFIX}${code}`);
   }
 
   expression.push(`${ICON_PREFIX}DEFAULT`);

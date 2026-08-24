@@ -7,7 +7,7 @@ services:
     runtime: python
     rootDir: BACKEND
     plan: free
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && test -f data/infrastructures.json
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION

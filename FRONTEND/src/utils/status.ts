@@ -31,6 +31,8 @@ export const TYPE_LABELS: Record<string, string> = {
   INSTITUTO_FEDERAL: "Instituto federal",
   POSTO_SAUDE: "Posto de saúde",
   RODOVIA: "Rodovia",
+  BOMBEIROS: "Corpo de Bombeiros",
+  PRONTO_ATENDIMENTO: "Pronto atendimento",
 };
 
 export const TYPE_ICONS: Record<string, string> = {
@@ -46,6 +48,8 @@ export const TYPE_ICONS: Record<string, string> = {
   INSTITUTO_FEDERAL: "📚",
   POSTO_SAUDE: "💉",
   RODOVIA: "🚗",
+  BOMBEIROS: "🚒",
+  PRONTO_ATENDIMENTO: "🩺",
 };
 
 export function getTypeIcon(type: string): string {

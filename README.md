@@ -41,7 +41,7 @@ Aplicação: http://localhost:3000
 
 ## Funcionalidades do MVP
 
-- Mapa interativo com 20 infraestruturas reais (seed automático)
+- Mapa interativo com 100 infraestruturas reais (dataset versionado em `BACKEND/data/infrastructures.json`)
 - KPIs operacionais (total, OK, alerta, crítica)
 - Filtros sincronizados entre mapa, KPIs e tabela
 - Página de dados com busca e tabela completa

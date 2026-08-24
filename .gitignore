@@ -21,8 +21,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# Data (local/generated datasets — seed runs on first boot)
-BACKEND/data/infrastructures.json
+# Data temporária (não versionar arquivos gerados em runtime)
 BACKEND/data/*.tmp
 
 # IDE / OS

@@ -1,6 +1,23 @@
 from datetime import UTC, datetime
 from typing import Any
 
+TYPE_ALIASES: dict[str, str] = {
+    "Hospital": "HOSPITAL",
+    "Hospital/Maternidade": "HOSPITAL",
+    "Escola": "ESCOLA",
+    "Polícia Civil": "POLICIA_CIVIL",
+    "Polícia Militar": "POLICIA_MILITAR",
+    "Transporte": "TERMINAL_RODOVIARIO",
+    "Aeroporto": "AEROPORTO",
+    "Ponte/Rodovia": "PONTE",
+}
+
+
+def normalize_type(type_value: str | None) -> str | None:
+    if not type_value:
+        return type_value
+    return TYPE_ALIASES.get(type_value, type_value)
+
 
 def get_record_altitude(record: dict[str, Any]) -> float | None:
     value = record.get("altitude_m_estimada")
@@ -18,6 +35,7 @@ def normalize_record(raw: dict[str, Any]) -> dict[str, Any]:
     normalized: dict[str, Any] = {
         **raw,
         "id": str(raw.get("id")),
+        "type": normalize_type(raw.get("type")),
         "altitude_m_estimada": altitude,
         "altitude_m": raw.get("altitude_m", altitude),
         "management": raw.get("management"),
