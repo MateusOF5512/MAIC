@@ -94,71 +94,25 @@ export function InfrastructureMap({
         map.addSource(INFRASTRUCTURES_SOURCE_ID, {
           type: "geojson",
           data: { type: "FeatureCollection", features: [] },
-          cluster: true,
-          clusterMaxZoom: 14,
-          clusterRadius: 50,
         });
 
         map.addLayer({
-          id: "clusters",
+          id: "points",
           type: "circle",
           source: INFRASTRUCTURES_SOURCE_ID,
-        filter: ["has", "point_count"],
-        paint: {
-          "circle-color": "#334155",
-          "circle-radius": ["step", ["get", "point_count"], 18, 5, 24, 10, 30],
-          "circle-opacity": 0.85,
-        },
-      });
+          paint: getMapPointPaint("status"),
+        });
 
-      map.addLayer({
-        id: "cluster-count",
-        type: "symbol",
-        source: INFRASTRUCTURES_SOURCE_ID,
-        filter: ["has", "point_count"],
-        layout: {
-          "text-field": "{point_count_abbreviated}",
-          "text-size": 12,
-        },
-        paint: {
-          "text-color": "#ffffff",
-        },
-      });
+        await registerTypeIcons(map);
 
-      map.addLayer({
-        id: "unclustered-point",
-        type: "circle",
-        source: INFRASTRUCTURES_SOURCE_ID,
-        filter: ["!", ["has", "point_count"]],
-        paint: getMapPointPaint("status"),
-      });
+        map.addLayer({
+          id: "point-icons",
+          type: "symbol",
+          source: INFRASTRUCTURES_SOURCE_ID,
+          layout: TYPE_ICON_LAYOUT,
+        });
 
-      await registerTypeIcons(map);
-
-      map.addLayer({
-        id: "unclustered-icon",
-        type: "symbol",
-        source: INFRASTRUCTURES_SOURCE_ID,
-        filter: ["!", ["has", "point_count"]],
-        layout: TYPE_ICON_LAYOUT,
-      });
-
-      map.on("click", "clusters", async (event) => {
-        const features = map.queryRenderedFeatures(event.point, { layers: ["clusters"] });
-        const clusterId = features[0]?.properties?.cluster_id;
-        const source = map.getSource(INFRASTRUCTURES_SOURCE_ID) as maplibregl.GeoJSONSource;
-        if (clusterId === undefined) return;
-        try {
-          const zoom = await source.getClusterExpansionZoom(clusterId);
-          const geometry = features[0].geometry;
-          if (geometry.type !== "Point") return;
-          map.easeTo({ center: geometry.coordinates as [number, number], zoom });
-        } catch {
-          return;
-        }
-      });
-
-      map.on("click", "unclustered-point", (event) => {
+      map.on("click", "points", (event) => {
         const feature = event.features?.[0];
         if (!feature || feature.geometry.type !== "Point") return;
         const properties =
@@ -170,7 +124,7 @@ export function InfrastructureMap({
           .addTo(map);
       });
 
-      ["clusters", "unclustered-point"].forEach((layerId) => {
+      ["points"].forEach((layerId) => {
         map.on("mouseenter", layerId, () => {
           map.getCanvas().style.cursor = "pointer";
         });
