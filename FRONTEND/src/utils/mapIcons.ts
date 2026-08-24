@@ -1,4 +1,4 @@
-import type { Expression, Map } from "maplibre-gl";
+import type { CircleLayerSpecification, Map, SymbolLayerSpecification } from "maplibre-gl";
 
 import { TYPE_ICONS } from "@/utils/status";
 
@@ -19,7 +19,7 @@ export const STATUS_MAP_STROKE_COLORS = {
   CRITICA: "#fca5a5",
 } as const;
 
-export function getMapPointPaint(statusField: string) {
+export function getMapPointPaint(statusField: string): CircleLayerSpecification["paint"] {
   return {
     "circle-color": [
       "match",
@@ -46,7 +46,7 @@ export function getMapPointPaint(statusField: string) {
       "#e2e8f0",
     ],
     "circle-opacity": 0.95,
-  } as const;
+  };
 }
 
 function loadEmojiImage(map: Map, id: string, emoji: string): Promise<void> {
@@ -92,7 +92,10 @@ export async function registerTypeIcons(map: Map): Promise<void> {
   await Promise.all(loads);
 }
 
-export function getTypeIconImageExpression(): Expression {
+type SymbolIconLayout = NonNullable<SymbolLayerSpecification["layout"]>;
+type IconImageExpression = NonNullable<SymbolIconLayout["icon-image"]>;
+
+export function getTypeIconImageExpression(): IconImageExpression {
   const expression: unknown[] = ["match", ["get", "type"]];
 
   for (const type of Object.keys(TYPE_ICONS)) {
@@ -100,11 +103,11 @@ export function getTypeIconImageExpression(): Expression {
   }
 
   expression.push(`${ICON_PREFIX}DEFAULT`);
-  return expression as Expression;
+  return expression as IconImageExpression;
 }
 
-export const TYPE_ICON_LAYOUT = {
+export const TYPE_ICON_LAYOUT: SymbolIconLayout = {
   "icon-image": getTypeIconImageExpression(),
   "icon-size": 0.78,
   "icon-allow-overlap": true,
-} as const;
+};
