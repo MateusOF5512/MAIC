@@ -1,0 +1,35 @@
+# Blueprint Render — dois Web Services (backend + frontend)
+# Ajuste CORS_ORIGINS e NEXT_PUBLIC_API_URL com as URLs reais após o primeiro deploy.
+
+services:
+  - type: web
+    name: aic-backend
+    runtime: python
+    rootDir: BACKEND
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: HOST
+        value: 0.0.0.0
+      - key: DATA_FILE
+        value: ./data/infrastructures.json
+      - key: API_PREFIX
+        value: /api/v1
+      - key: CORS_ORIGINS
+        sync: false
+
+  - type: web
+    name: aic-frontend
+    runtime: node
+    rootDir: FRONTEND
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NEXT_PUBLIC_API_URL
+        sync: false

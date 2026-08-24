@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --card: 255 255 255;
+  --border: 226 232 240;
+  --muted: 100 116 139;
+  --status-ok: 22 163 74;
+  --status-alerta: 234 88 12;
+  --status-critica: 220 38 38;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.maplibregl-popup-content {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.maplibregl-popup-close-button {
+  font-size: 18px;
+  padding: 4px 8px;
+}
+
+.range-thumb {
+  pointer-events: none;
+}
+
+.range-thumb::-webkit-slider-runnable-track {
+  appearance: none;
+  background: transparent;
+  height: 6px;
+}
+
+.range-thumb::-moz-range-track {
+  background: transparent;
+  height: 6px;
+  border: none;
+}
+
+.range-thumb::-webkit-slider-thumb {
+  pointer-events: auto;
+  appearance: none;
+  margin-top: -5px;
+  height: 16px;
+  width: 16px;
+  border-radius: 9999px;
+  border: 2px solid white;
+  background: rgb(15 23 42);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+  cursor: grab;
+}
+
+.range-thumb::-moz-range-thumb {
+  pointer-events: auto;
+  height: 16px;
+  width: 16px;
+  border-radius: 9999px;
+  border: 2px solid white;
+  background: rgb(15 23 42);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+  cursor: grab;
+}
