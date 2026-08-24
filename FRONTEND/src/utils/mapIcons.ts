@@ -1,4 +1,8 @@
-import type { CircleLayerSpecification, Map, SymbolLayerSpecification } from "maplibre-gl";
+import type {
+  CircleLayerSpecification,
+  Map as MaplibreMap,
+  SymbolLayerSpecification,
+} from "maplibre-gl";
 
 import { TYPE_ICONS } from "@/utils/status";
 
@@ -15,6 +19,7 @@ const TYPE_ALIASES: Record<string, keyof typeof TYPE_ICONS> = {
 
 const ICON_CANVAS_SIZE = 88;
 const ICON_PREFIX = "type-icon-";
+const emojiDataUrlCache = new Map<string, string>();
 
 export const MAP_POINT_RADIUS = 26;
 
@@ -60,28 +65,38 @@ export function getMapPointPaint(statusField: string): CircleLayerSpecification[
   };
 }
 
-function loadEmojiImage(map: Map, id: string, emoji: string): Promise<void> {
+function createEmojiDataUrl(emoji: string): string {
+  const cached = emojiDataUrlCache.get(emoji);
+  if (cached) {
+    return cached;
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = ICON_CANVAS_SIZE;
+  canvas.height = ICON_CANVAS_SIZE;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Canvas não suportado");
+  }
+
+  ctx.clearRect(0, 0, ICON_CANVAS_SIZE, ICON_CANVAS_SIZE);
+  ctx.font = `${ICON_CANVAS_SIZE * 0.76}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(emoji, ICON_CANVAS_SIZE / 2, ICON_CANVAS_SIZE / 2 + 1);
+
+  const dataUrl = canvas.toDataURL();
+  emojiDataUrlCache.set(emoji, dataUrl);
+  return dataUrl;
+}
+
+function loadEmojiImage(map: MaplibreMap, id: string, emoji: string): Promise<void> {
   if (map.hasImage(id)) {
     return Promise.resolve();
   }
 
   return new Promise((resolve, reject) => {
-    const canvas = document.createElement("canvas");
-    canvas.width = ICON_CANVAS_SIZE;
-    canvas.height = ICON_CANVAS_SIZE;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      reject(new Error("Canvas não suportado"));
-      return;
-    }
-
-    ctx.clearRect(0, 0, ICON_CANVAS_SIZE, ICON_CANVAS_SIZE);
-    ctx.font = `${ICON_CANVAS_SIZE * 0.76}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(emoji, ICON_CANVAS_SIZE / 2, ICON_CANVAS_SIZE / 2 + 1);
-
     const image = new Image();
     image.onload = () => {
       if (!map.hasImage(id)) {
@@ -90,11 +105,11 @@ function loadEmojiImage(map: Map, id: string, emoji: string): Promise<void> {
       resolve();
     };
     image.onerror = () => reject(new Error(`Falha ao carregar ícone ${id}`));
-    image.src = canvas.toDataURL();
+    image.src = createEmojiDataUrl(emoji);
   });
 }
 
-export async function registerTypeIcons(map: Map): Promise<void> {
+export async function registerTypeIcons(map: MaplibreMap): Promise<void> {
   const loads = Object.entries(TYPE_ICONS).map(([type, emoji]) =>
     loadEmojiImage(map, `${ICON_PREFIX}${type}`, emoji),
   );

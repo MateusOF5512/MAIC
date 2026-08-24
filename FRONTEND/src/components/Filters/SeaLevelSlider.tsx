@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 import { useSeaLevelRange } from "@/hooks/useSimulationData";
 import { cn } from "@/utils/cn";
 
@@ -14,6 +15,7 @@ interface SeaLevelSliderProps {
 export function SeaLevelSlider({ value, onChange, className }: SeaLevelSliderProps) {
   const { data: range, isLoading } = useSeaLevelRange();
   const [localValue, setLocalValue] = useState(value);
+  const debouncedOnChange = useDebouncedCallback(onChange, 200);
 
   useEffect(() => {
     setLocalValue(value);
@@ -40,7 +42,7 @@ export function SeaLevelSlider({ value, onChange, className }: SeaLevelSliderPro
         onChange={(event) => {
           const next = Number(event.target.value);
           setLocalValue(next);
-          onChange(next);
+          debouncedOnChange(next);
         }}
         aria-label="Nível do mar em metros"
         className="h-1.5 min-w-[120px] flex-1 cursor-pointer accent-sky-700"

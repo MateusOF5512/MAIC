@@ -98,3 +98,21 @@ export interface NavItem {
   label: string;
   underConstruction?: boolean;
 }
+
+export interface NearbyOrigin {
+  cep: string;
+  latitude: number;
+  longitude: number;
+  address: string | null;
+}
+
+export interface NearbyByTypeItem {
+  type: string;
+  distance_km: number;
+  infrastructure: Infrastructure;
+}
+
+export interface NearbyByTypeResponse {
+  origin: NearbyOrigin;
+  results: NearbyByTypeItem[];
+}

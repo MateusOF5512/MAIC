@@ -9,9 +9,11 @@ from app.schemas.infrastructure import (
     InfrastructureRead,
     InfrastructureStatusPatch,
     InfrastructureUpdate,
+    NearbyByTypeResponse,
 )
 from app.services.geo_service import GeoService
 from app.services.infrastructure_service import InfrastructureService
+from app.services.proximity_service import ProximityService
 
 router = APIRouter(prefix="/infrastructures", tags=["infrastructures"])
 
@@ -70,6 +72,31 @@ def get_filter_options() -> dict[str, list[str]]:
 @router.get("/options/altitude", response_model=AltitudeRangeResponse)
 def get_altitude_range() -> AltitudeRangeResponse:
     return InfrastructureService().get_altitude_range()
+
+
+@router.get("/nearby-by-type", response_model=NearbyByTypeResponse)
+def get_nearby_by_type(
+    cep: str = Query(..., min_length=8, max_length=10),
+    status: InfrastructureStatus | None = Query(default=None),
+    type: str | None = Query(default=None),
+    city: str | None = Query(default=None),
+    neighborhood: str | None = Query(default=None),
+    search: str | None = Query(default=None),
+    management: str | None = Query(default=None),
+    altitude_min: float | None = Query(default=None),
+    altitude_max: float | None = Query(default=None),
+) -> NearbyByTypeResponse:
+    filters = _build_filters(
+        status,
+        type,
+        city,
+        neighborhood,
+        search,
+        management,
+        altitude_min,
+        altitude_max,
+    )
+    return ProximityService().find_nearest_by_type(cep, filters)
 
 
 @router.get("", response_model=list[InfrastructureRead])

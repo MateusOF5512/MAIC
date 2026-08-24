@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronDown, SlidersHorizontal } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { InfrastructureFiltersBar } from "@/components/Filters/InfrastructureFiltersBar";
@@ -8,6 +9,8 @@ import { useFilters } from "@/hooks/useFilters";
 import { cn } from "@/utils/cn";
 
 export function FiltersExpander({ className }: { className?: string }) {
+  const pathname = usePathname();
+  const isBuscaPage = pathname.startsWith("/busca");
   const [open, setOpen] = useState(false);
   const { filters } = useFilters();
 
@@ -44,7 +47,7 @@ export function FiltersExpander({ className }: { className?: string }) {
             showNeighborhood
             showManagement
             showAltitude
-            showBasemap
+            showBasemap={!isBuscaPage}
           />
         </div>
       ) : null}

@@ -1,5 +1,6 @@
 from collections import Counter
 
+from app.database.connection import get_infrastructure_repository
 from app.repositories.json_infrastructure_repository import JsonInfrastructureRepository
 from app.schemas.dashboard import ChartDataPoint, DashboardChartsResponse
 from app.schemas.infrastructure import InfrastructureFilter
@@ -7,7 +8,7 @@ from app.schemas.infrastructure import InfrastructureFilter
 
 class DashboardService:
     def __init__(self, repository: JsonInfrastructureRepository | None = None) -> None:
-        self.repository = repository or JsonInfrastructureRepository()
+        self.repository = repository or get_infrastructure_repository()
 
     def get_charts(self, filters: InfrastructureFilter | None = None) -> DashboardChartsResponse:
         records = self.repository.list_all(filters)

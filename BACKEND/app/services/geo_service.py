@@ -1,12 +1,13 @@
 from typing import Any
 
+from app.database.connection import get_infrastructure_repository
 from app.repositories.json_infrastructure_repository import JsonInfrastructureRepository
 from app.schemas.infrastructure import GeoJsonFeatureCollection, InfrastructureFilter
 
 
 class GeoService:
     def __init__(self, repository: JsonInfrastructureRepository | None = None) -> None:
-        self.repository = repository or JsonInfrastructureRepository()
+        self.repository = repository or get_infrastructure_repository()
 
     def get_geojson(self, filters: InfrastructureFilter | None = None) -> GeoJsonFeatureCollection:
         records = self.repository.list_all(filters)

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { useAltitudeRange } from "@/hooks/useInfrastructureData";
+import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 import { useFilters } from "@/hooks/useFilters";
 import { cn } from "@/utils/cn";
 
@@ -11,6 +12,17 @@ export function AltitudeSlider({ className }: { className?: string }) {
   const { filters, setAltitudeRange } = useFilters();
   const [localMin, setLocalMin] = useState<number | null>(null);
   const [localMax, setLocalMax] = useState<number | null>(null);
+
+  const debouncedApplyFilters = useDebouncedCallback(
+    (min: number, max: number, rangeMin: number, rangeMax: number) => {
+      if (min <= rangeMin && max >= rangeMax) {
+        setAltitudeRange(undefined, undefined);
+        return;
+      }
+      setAltitudeRange(min, max);
+    },
+    250
+  );
 
   useEffect(() => {
     if (!range) return;
@@ -32,12 +44,7 @@ export function AltitudeSlider({ className }: { className?: string }) {
     const max = Math.max(nextMin, nextMax);
     setLocalMin(min);
     setLocalMax(max);
-
-    if (min <= range.min && max >= range.max) {
-      setAltitudeRange(undefined, undefined);
-      return;
-    }
-    setAltitudeRange(min, max);
+    debouncedApplyFilters(min, max, range.min, range.max);
   };
 
   return (

@@ -2,6 +2,7 @@ from typing import Any
 
 from app.database.record_normalizer import get_record_altitude
 from app.models.infrastructure import InfrastructureStatus
+from app.database.connection import get_infrastructure_repository
 from app.repositories.json_infrastructure_repository import JsonInfrastructureRepository
 from app.schemas.infrastructure import (
     GeoJsonFeatureCollection,
@@ -24,7 +25,7 @@ def classify_sea_level_impact(altitude: float | None, sea_level: float) -> str |
 
 class SimulationService:
     def __init__(self, repository: JsonInfrastructureRepository | None = None) -> None:
-        self.repository = repository or JsonInfrastructureRepository()
+        self.repository = repository or get_infrastructure_repository()
 
     def get_sea_level_range(self) -> dict[str, float]:
         altitude_range = self.repository.get_altitude_range()

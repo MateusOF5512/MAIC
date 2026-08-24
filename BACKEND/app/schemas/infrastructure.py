@@ -84,3 +84,21 @@ class AltitudeRangeResponse(BaseModel):
 class GeoJsonFeatureCollection(BaseModel):
     type: str = "FeatureCollection"
     features: list[dict[str, Any]]
+
+
+class NearbyOrigin(BaseModel):
+    cep: str
+    latitude: float
+    longitude: float
+    address: str | None = None
+
+
+class NearbyByTypeItem(BaseModel):
+    type: str
+    distance_km: float
+    infrastructure: InfrastructureRead
+
+
+class NearbyByTypeResponse(BaseModel):
+    origin: NearbyOrigin
+    results: list[NearbyByTypeItem]

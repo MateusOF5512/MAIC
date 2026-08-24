@@ -8,6 +8,7 @@ import type {
   Infrastructure,
   InfrastructureFilters,
   KpiResponse,
+  NearbyByTypeResponse,
 } from "@/types/infrastructure";
 import { buildQueryParams } from "@/utils/cn";
 
@@ -88,5 +89,16 @@ export async function fetchSimulationGeoJson(
   const { data } = await api.get<GeoJsonFeatureCollection>("/api/v1/simulations/geojson", {
     params: { sea_level: seaLevel, ...buildQueryParams(filters) },
   });
+  return data;
+}
+
+export async function fetchNearbyByType(
+  cep: string,
+  filters: InfrastructureFilters = {},
+): Promise<NearbyByTypeResponse> {
+  const { data } = await api.get<NearbyByTypeResponse>(
+    "/api/v1/infrastructures/nearby-by-type",
+    { params: { cep, ...buildQueryParams(filters) } },
+  );
   return data;
 }

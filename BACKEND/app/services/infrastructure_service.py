@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 
+from app.database.connection import get_infrastructure_repository
 from app.repositories.json_infrastructure_repository import JsonInfrastructureRepository
 from app.schemas.infrastructure import (
     AltitudeRangeResponse,
@@ -13,7 +14,7 @@ from app.schemas.infrastructure import (
 
 class InfrastructureService:
     def __init__(self, repository: JsonInfrastructureRepository | None = None) -> None:
-        self.repository = repository or JsonInfrastructureRepository()
+        self.repository = repository or get_infrastructure_repository()
 
     def list_infrastructures(
         self, filters: InfrastructureFilter | None = None

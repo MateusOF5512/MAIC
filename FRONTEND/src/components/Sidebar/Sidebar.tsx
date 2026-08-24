@@ -6,6 +6,7 @@ import {
   FlaskConical,
   MapPinned,
   Menu,
+  Search,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -25,6 +26,7 @@ const navItems: NavItem[] = [
   { href: "/dados", label: "Dados" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/simulacoes", label: "Simulações" },
+  { href: "/busca", label: "Busca por Proximidade" },
 ];
 
 const icons = {
@@ -32,6 +34,7 @@ const icons = {
   "/dados": Database,
   "/dashboard": BarChart3,
   "/simulacoes": FlaskConical,
+  "/busca": Search,
 };
 
 export function Sidebar() {

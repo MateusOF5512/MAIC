@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { useFilterOptions } from "@/hooks/useInfrastructureData";
+import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 import { useFilters } from "@/hooks/useFilters";
 import {
   Select,
@@ -43,6 +46,15 @@ export function InfrastructureFiltersBar({
   const { filters, setFilter } = useFilters();
   const { data: options } = useFilterOptions();
   const { basemapId, setBasemapId } = useMapBasemap();
+  const [searchInput, setSearchInput] = useState(filters.search ?? "");
+
+  useEffect(() => {
+    setSearchInput(filters.search ?? "");
+  }, [filters.search]);
+
+  const debouncedSetSearch = useDebouncedCallback((value: string) => {
+    setFilter("search", value || undefined);
+  }, 400);
 
   return (
     <div className={cn("flex flex-wrap items-center gap-3", className)}>
@@ -50,8 +62,12 @@ export function InfrastructureFiltersBar({
         <input
           type="search"
           placeholder="Buscar infraestrutura..."
-          value={filters.search ?? ""}
-          onChange={(event) => setFilter("search", event.target.value || undefined)}
+          value={searchInput}
+          onChange={(event) => {
+            const value = event.target.value;
+            setSearchInput(value);
+            debouncedSetSearch(value);
+          }}
           className="h-10 w-full rounded-md border border-border bg-white px-3 text-sm outline-none focus:ring-2 focus:ring-slate-300 lg:max-w-sm"
         />
       )}

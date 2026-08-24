@@ -1,5 +1,6 @@
 from typing import Any
 
+from app.database.connection import get_json_store
 from app.database.json_store import JsonStore
 from app.database.record_normalizer import get_record_altitude, normalize_records
 from app.models.infrastructure import InfrastructureStatus
@@ -14,10 +15,16 @@ from app.schemas.infrastructure import (
 
 class JsonInfrastructureRepository(InfrastructureRepository):
     def __init__(self, store: JsonStore | None = None) -> None:
-        self.store = store or JsonStore()
+        self.store = store or get_json_store()
+        self._normalized_cache: list[dict[str, Any]] | None = None
+
+    def _invalidate_cache(self) -> None:
+        self._normalized_cache = None
 
     def _load_records(self) -> list[dict[str, Any]]:
-        return normalize_records(self.store.read_all())
+        if self._normalized_cache is None:
+            self._normalized_cache = normalize_records(self.store.read_all())
+        return self._normalized_cache
 
     def list_all(self, filters: InfrastructureFilter | None = None) -> list[dict[str, Any]]:
         return self._apply_filters(self._load_records(), filters)
@@ -34,6 +41,7 @@ class JsonInfrastructureRepository(InfrastructureRepository):
         record = normalize_record_dict(JsonStore.new_record(data.model_dump(mode="json")))
         records.append(record)
         self.store.write_all(records)
+        self._invalidate_cache()
         return record
 
     def update(self, infrastructure_id: str, data: InfrastructureUpdate) -> dict[str, Any] | None:
@@ -46,6 +54,7 @@ class JsonInfrastructureRepository(InfrastructureRepository):
             updated = JsonStore.touch_record(record, updates)
             records[index] = normalize_record_dict(updated)
             self.store.write_all(records)
+            self._invalidate_cache()
             return records[index]
         return None
 
@@ -87,6 +96,7 @@ class JsonInfrastructureRepository(InfrastructureRepository):
 
     def replace_all(self, records: list[dict[str, Any]]) -> None:
         self.store.write_all(records)
+        self._invalidate_cache()
 
     def is_empty(self) -> bool:
         return self.store.is_empty()
